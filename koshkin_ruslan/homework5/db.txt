@@ -1,0 +1,46 @@
+Table users:
+user_id
+login
+reg_dttm
+
+Table sessions:
+session_id
+user_id
+begin_dttm
+end_dttm
+
+Table payments:
+payment_id
+user_id
+accident_id
+payment_sum
+payment_dttm
+
+Table accidents:
+accident_id
+details
+needed_sum
+collected_sum
+
+Table quotes:
+quote_id
+quote_text
+quote_dttm
+quote_rating
+
+Table marks:
+mark_id
+user_id
+quote_id
+mark
+
+Table places:
+place_id
+place_name
+
+Table votes:
+vote_id
+user_id
+accident_id
+place_id
+qoute_id
