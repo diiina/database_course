@@ -4,24 +4,23 @@ CREATE TABLE Users (
  Id SERIAL PRIMARY KEY,
  Name VARCHAR(50) UNIQUE,
  Email VARCHAR(50) UNIQUE,
- WalletScore BIGINT,
- Score BIGINT,
- Sex enum('man', 'woman'), 
+ WalletScore BIGINT NOT NULL,
+ Score BIGINT NOT NULL,
  DateBirth TIMESTAMP,
- RegDttm TIMESTAMP
+ RegDttm TIMESTAMP NOT NULL
 );
 CREATE INDEX indexName ON Users(Name);
 CREATE INDEX indexEmail ON Users(email);
 
 CREATE TABLE IF NOT EXISTS sessions (
-	Id INT,
+	Id SERIAL PRIMARY KEY,
 	UserId INT REFERENCES users(Id),
 	BeginDttm TIMESTAMP,
 	EndDttm TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS payments (
-	Id INT,
+	Id SERIAL PRIMARY KEY,
 	UserId INT REFERENCES users(Id),
 	PaymentSum DOUBLE,
 	PaymentDttm TIMESTAMP
@@ -31,6 +30,6 @@ CREATE TABLE Topic (
  Id SERIAL PRIMARY KEY,
  Name VARCHAR(50) UNIQUE,
  Description VARCHAR(1000),
- DialogsCount BIGINT
+ DialogsCount BIGINT NOT NULL
 );
 CREATE INDEX indexName ON Topic(Name);
