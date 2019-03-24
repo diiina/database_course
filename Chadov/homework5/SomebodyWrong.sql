@@ -14,14 +14,14 @@ CREATE INDEX indexEmail ON Users(email);
 
 CREATE TABLE IF NOT EXISTS sessions (
 	Id SERIAL PRIMARY KEY,
-	UserId INT REFERENCES users(Id),
+	UserId INT REFERENCES Users(Id),
 	BeginDttm TIMESTAMP,
 	EndDttm TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS payments (
 	Id SERIAL PRIMARY KEY,
-	UserId INT REFERENCES users(Id),
+	UserId INT REFERENCES Users(Id),
 	PaymentSum DOUBLE,
 	PaymentDttm TIMESTAMP
 );
