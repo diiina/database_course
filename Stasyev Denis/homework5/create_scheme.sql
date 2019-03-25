@@ -30,7 +30,7 @@ CREATE TABLE `technotrack_formula_1`.`tribunes` (
   `tribune_name` VARCHAR(150) NOT NULL,
   `track_id` INT NOT NULL,
   `tribune_capacity` INT UNSIGNED NOT NULL,
-  `ticket_price` DECIMAL UNSIGNED NOT NULL,
+  `ticket_price` DECIMAL(10,2) UNSIGNED NOT NULL,
   PRIMARY KEY (`tribune_id`),
   INDEX `fk_tribunes_1_idx` (`track_id` ASC) VISIBLE,
   CONSTRAINT `fk_tribunes_1`
@@ -67,11 +67,15 @@ ADD CONSTRAINT `fk_clients_2`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
+ALTER TABLE `technotrack_formula_1`.`clients` 
+DROP INDEX `email_UNIQUE` ;
+;
+
 
 CREATE TABLE `technotrack_formula_1`.`categories` (
   `category_id` INT NOT NULL AUTO_INCREMENT,
   `category_name` VARCHAR(65) NOT NULL,
-  `ticket_price_coefficient` DECIMAL NOT NULL,
+  `ticket_price_coefficient` DECIMAL(10,2) NOT NULL,
   PRIMARY KEY (`category_id`));
 
 
@@ -108,7 +112,7 @@ CREATE TABLE `technotrack_formula_1`.`payments_in` (
   `payment_in_id` INT NOT NULL AUTO_INCREMENT,
   `client_id` INT NOT NULL,
   `ticket_id` INT NOT NULL,
-  `payment_in_size` DECIMAL NOT NULL,
+  `payment_in_size` DECIMAL(10,2) NOT NULL,
   `created_at` DATETIME NOT NULL,
   PRIMARY KEY (`payment_in_id`),
   INDEX `fk_payments_in_1_idx` (`client_id` ASC) VISIBLE,
@@ -129,7 +133,7 @@ CREATE TABLE `technotrack_formula_1`.`payments_out` (
   `payment_out_id` INT NOT NULL AUTO_INCREMENT,
   `client_id` INT NOT NULL,
   `ticket_id` INT NOT NULL,
-  `payment_out_size` DECIMAL NOT NULL,
+  `payment_out_size` DECIMAL(10,2) NOT NULL,
   `created_at` DATETIME NOT NULL,
   `reason` VARCHAR(45) NULL,
   PRIMARY KEY (`payment_out_id`),
