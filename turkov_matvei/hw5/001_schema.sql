@@ -37,4 +37,10 @@ create table if not exists online_kino.Actor_in_Movie (
   movie_id integer not null references online_kino.Movies(movie_id),
   actor_id integer not null references online_kino.Users(user_id)
 );
-
+create table if not exists online_kino.Views
+(
+  view_id   serial primary key,
+  view_time timestamp not null default current_timestamp,
+  user_id    integer   not null references online_kino.Users (user_id),
+  moviee_id integer not null references online_kino.Movies(movie_id)
+);
