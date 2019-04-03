@@ -1,13 +1,14 @@
 import random
 from data_fixer import COMMENTS
 from datetime import timedelta, datetime
-import mysql_connector
+import mysql.connector
+import json
 
 mydb = mysql.connector.connect(
-   host=,
-   user=,
-   passwd=,
-   database=
+   host="localhost",
+   user="matt1",
+   passwd="matt1",
+   database="online_kino"
  )
 
 mycursor = mydb.cursor()
@@ -28,31 +29,29 @@ with open("kinopoisk.csv",'r') as file:
 		line = line.split(';')
 		movies = (line[1],random.randint(150,400))
 		val.append(movies)
+print(sql)
 mycursor.executemany(sql, val)
 mydb.commit()
 
 #Users table insert
-val = []
-sql = "INSERT INTO Users (user_name) VALUES (%s)"
+sql = """INSERT INTO Users (user_name) VALUES {%s}"""
 with open('usernames.txt','r') as file:
 	for line in file:
 		if (line != '\n'):
 			names = (line[:-1])
-			val.append(names)
-mycursor.executemany(sql, val)
+			sql = """INSERT INTO Users (user_name) VALUES (\'{}\');""".format(names)
+			mycursor.execute(sql)
 mydb.commit()
 
 #Payment method table insert
-val = []
-sql = "INSERT INTO Payment_methods (payment_method) VALUES (%s)"
+sql = "INSERT INTO Payment_methods (payment_method) VALUES (\'%s\');"
 payment_methods = ['Visa','MasterCard','American Express','Paypal',"Yandex Money", "Apple card"]
 for element in payment_methods:
-	val.append(element)
-
-mycursor.executemany(sql, val)
+	sql = "INSERT INTO Payment_methods (payment_method) VALUES (\'{}\');".format(element)
+	mycursor.execute(sql)
 mydb.commit()
 
-#Comments table insert
+# #Comments table insert
 val = []
 sql = "INSERT INTO Comments (movie_id,user_id,comment_text,comment_date) VALUES (%s,%s,%s,%s)"
 for comment in COMMENTS:
@@ -94,7 +93,7 @@ for _ in range(0,10000):
 mycursor.executemany(sql, val)
 mydb.commit()
 
-#Views table insert
+# #Views table insert
 val = []
 sql = "INSERT INTO Views (view_time, user_id, moviee_id) VALUES (%s,%s,%s)"
 for _ in range(0,20000):
