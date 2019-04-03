@@ -1,4 +1,7 @@
 # DAU
+use hw1;
+# Helped for optimization
+CREATE INDEX index_dttm ON sessions(begin_dttm);
 EXPLAIN WITH RECURSIVE cte AS
 (
     SELECT MIN(CAST(begin_dttm AS DATE)) AS dt FROM sessions
