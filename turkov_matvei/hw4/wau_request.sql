@@ -9,4 +9,4 @@ from cte,sessions
 where cte.day_of_week <= cast(sessions.begin_dttm as date)
 and cte.day_of_week + interval 1 week > cast(sessions.begin_dttm as date)
 group by  cte.day_of_week
-order by cte.day_of_week
+order by cte.day_of_weeks

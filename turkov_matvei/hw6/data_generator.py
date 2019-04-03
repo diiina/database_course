@@ -17,7 +17,7 @@ def random_date(start, end):
      int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
      random_second = random.randrange(int_delta)
      return start + timedelta(seconds=random_second)
-D1 = datetime.strptime('1/1/1970 1:30 PM', '%m/%d/%Y %I:%M %p')
+D1 = datetime.strptime('1/1/2009 1:30 PM', '%m/%d/%Y %I:%M %p')
 D2 = datetime.strptime('1/1/2010 1:30 PM', '%m/%d/%Y %I:%M %p')
 
 # Movies table insert
@@ -96,7 +96,7 @@ mydb.commit()
 # #Views table insert
 val = []
 sql = "INSERT INTO Views (view_time, user_id, moviee_id) VALUES (%s,%s,%s)"
-for _ in range(0,20000):
+for _ in range(0,1000):
 	view = (str(random_date(D1,D2)),random.randint(1,200),random.randint(1,223))
 	val.append(view)
 mycursor.executemany(sql, val)
