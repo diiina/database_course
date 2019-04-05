@@ -128,10 +128,10 @@ print("orders", mycursor.rowcount, "record inserted.")
 val = []
 sql = "INSERT INTO visits (IdOrder, DateVisit) VALUES (%s, %s)"
 
-d1 = datetime.strptime('1/1/1984 1:30 PM', '%m/%d/%Y %I:%M %p')
-d2 = datetime.strptime('1/1/2001 4:50 AM', '%m/%d/%Y %I:%M %p')
+d1 = datetime.strptime('1/1/2018 1:30 PM', '%m/%d/%Y %I:%M %p')
+d2 = datetime.strptime('1/1/2020 4:50 AM', '%m/%d/%Y %I:%M %p')
 
-for i in range(0, 150, 1):
+for i in range(0, 550, 1):
     visit = (random.randint(0,300), random_date(d1, d2))
     val.append(visit)
 
@@ -143,10 +143,10 @@ print("visits", mycursor.rowcount, "record inserted.")
 val = []
 sql = "INSERT INTO payments (DatePayement, IdOrder, Pay) VALUES (%s, %s, %s)"
 
-d1 = datetime.strptime('1/1/1984 1:30 PM', '%m/%d/%Y %I:%M %p')
-d2 = datetime.strptime('1/1/2001 4:50 AM', '%m/%d/%Y %I:%M %p')
+d1 = datetime.strptime('1/1/2018 1:30 PM', '%m/%d/%Y %I:%M %p')
+d2 = datetime.strptime('1/1/2020 4:50 AM', '%m/%d/%Y %I:%M %p')
 
-for i in range(0, 150, 1):
+for i in range(0, 550, 1):
     pay = (random_date(d1, d2), random.randint(0,300), random.randint(100, 1000))
     val.append(pay)
 
