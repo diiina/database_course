@@ -9,7 +9,7 @@ CREATE PROCEDURE populate_clients(IN number_of_rows INT)
             VALUES (CONCAT('first_name - ', i),
 	                CONCAT('second_name - ', i),
 	                CONCAT('vk_id - ', i),
-	                DATE(NOW() - INTERVAL FLOOR(RAND() * 10) MONTH - INTERVAL FLOOR(RAND() * 10) YEAR),
+	                DATE(NOW() - INTERVAL FLOOR(RAND() * 10) HOUR - INTERVAL FLOOR(RAND() * 20) DAY - INTERVAL FLOOR(RAND() * 10) MONTH),
 				    CEIL(RAND() * 10));
             SET i = i + 1;
         END WHILE;
@@ -50,7 +50,7 @@ CREATE PROCEDURE populate_workers(IN number_of_rows INT,IN role_id INT)
             VALUES (CONCAT('first_name - ', i),
 	                CONCAT('second_name - ', i),
 	                CONCAT('vk_id - ', i),
-				    DATE(NOW() - INTERVAL FLOOR(RAND() * 10) MONTH - INTERVAL FLOOR(RAND() * 10) YEAR),
+				    DATE(NOW() - INTERVAL FLOOR(RAND() * 10) HOUR - INTERVAL FLOOR(RAND() * 20) DAY - INTERVAL FLOOR(RAND() * 10) MONTH),
 				    role_id);
             SET i = i + 1;
         END WHILE;
@@ -66,12 +66,14 @@ DELIMITER //
 CREATE PROCEDURE populate_shifts(IN number_of_rows INT)
     BEGIN
         DECLARE i INT;
+        DECLARE data DATE;
         SET i = 1;
         START TRANSACTION;
         WHILE i <= number_of_rows DO
-            INSERT INTO shifts(start_dttm, end_dttm) 
-            VALUES (DATE(NOW() - INTERVAL FLOOR(i) HOUR - INTERVAL FLOOR(i / 128) MONTH - INTERVAL FLOOR(i / 512) YEAR),
-				    DATE(NOW() + INTERVAL FLOOR(4) HOUR - INTERVAL FLOOR(i) HOUR - INTERVAL FLOOR(i / 128) MONTH - INTERVAL FLOOR(i / 512) YEAR));
+            SET data = DATE( NOW() - INTERVAL FLOOR(i) DAY);
+            INSERT INTO shifts(start_dttm, end_dttm)
+            VALUES (data - INTERVAL FLOOR(8) HOUR,
+                    data + INTERVAL FLOOR(4) HOUR);
             SET i = i + 1; 
         END WHILE;
         COMMIT;
@@ -89,7 +91,7 @@ CREATE PROCEDURE populate_visits(IN number_of_rows INT, IN number_of_clients INT
         START TRANSACTION;
         WHILE i <= number_of_rows DO
             INSERT INTO visits(dttm, client) 
-            VALUES (DATE(NOW() - INTERVAL FLOOR(i) HOUR - INTERVAL FLOOR(i / 128) MONTH - INTERVAL FLOOR(i / 512) YEAR),
+            VALUES (DATE(NOW() - INTERVAL FLOOR(RAND() * 10) HOUR - INTERVAL FLOOR(RAND() * 20) DAY - INTERVAL FLOOR(RAND() * 10) MONTH),
 				    CEIL(RAND() * number_of_clients));
             SET i = i + 1; 
         END WHILE;
@@ -151,7 +153,7 @@ CREATE PROCEDURE populate_orders(IN number_of_rows INT, IN number_of_clients INT
             INSERT INTO orders(client, total_price, dttm) 
             VALUES (CEIL(RAND() * number_of_clients),
             		CEIL(RAND() * 1000),
-            		DATE(NOW() - INTERVAL FLOOR(i / 128) MONTH - INTERVAL FLOOR(i / 512) YEAR));
+            		DATE(NOW() - INTERVAL FLOOR(RAND() * 10) HOUR - INTERVAL FLOOR(RAND() * 20) DAY - INTERVAL FLOOR(RAND() * 10) MONTH));
             SET i = i + 1;
         END WHILE;
         COMMIT;
@@ -247,3 +249,20 @@ VALUES ("chef", 700);
 INSERT INTO roles(name, money_per_hour) 
 VALUES ("waiter", 300);
 
+CALL populate_clients(800);
+CALL populate_providers(10);
+
+CALL populate_workers(4, 1);
+CALL populate_workers(1, 2);
+CALL populate_workers(3, 4);
+CALL populate_workers(10, 5);
+CALL populate_workers(1, 3);
+
+CALL populate_shifts(1000);
+CALL populate_visits(6000, 800);
+CALL populate_ingredients(30);
+CALL populate_items(30);
+CALL populate_orders(5000, 800);
+CALL populate_order_item_link(8000, 30, 5000);
+CALL populate_ingredient_item_link(200, 30, 30);
+CALL populate_worker_shift_link(5000, 19, 1000);
