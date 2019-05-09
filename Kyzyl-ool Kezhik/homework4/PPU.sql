@@ -1,24 +1,33 @@
-drop table if exists mydate;
+select t1.dt as "Date", truncate(DPU/DAU, 2) as "PPU"
+from (
+       WITH RECURSIVE cte AS
+         (
+         SELECT MIN(CAST(begin_dttm AS DATE)) AS dt
+         FROM sessions
+         UNION ALL
+         SELECT dt + INTERVAL 1 DAY
+         FROM cte
+         WHERE dt + INTERVAL 1 DAY <= (SELECT MAX(CAST(begin_dttm AS DATE)) FROM sessions)
+         )
+         SELECT cte.dt, COUNT(DISTINCT sessions.user_id) as "DAU"
+         FROM sessions
+                RIGHT JOIN cte ON CAST(sessions.begin_dttm AS DATE) = cte.dt
+         GROUP BY cte.dt
+         ORDER BY 1
+     ) as t1 join (
 
-create table mydate (
-  currentdate date
-);
-
-insert into mydate values ('2018-09-07');
-
-with
-t1 as (
-  select count(distinct users.user_id) as AMOUNT_OF_UNIQUE_USERS_PAID_FOR_THE_DAY
-  from users join payments on users.user_id = payments.user_id
-  where payment_dttm > (select currentdate from mydate) and payment_dttm < date_add((select currentdate from mydate), interval 1 day)),
-t2 as (
-  select count(distinct users.user_id) as DAU
-  from users left join sessions on users.user_id = sessions.user_id
-  where begin_dttm > (select currentdate from mydate) and begin_dttm < date_add((select currentdate from mydate), interval 1 day)
+WITH RECURSIVE cte AS
+(
+    SELECT MIN(CAST(begin_dttm AS DATE)) AS dt FROM sessions
+        UNION ALL
+	SELECT dt + INTERVAL 1 DAY
+      FROM cte
+     WHERE dt + INTERVAL 1 DAY <= (SELECT MAX(CAST(begin_dttm AS DATE)) FROM sessions)
 )
-select t1.AMOUNT_OF_UNIQUE_USERS_PAID_FOR_THE_DAY / t2.DAU from t1, t2;
-
-drop table if exists mydate;
-
+select cte.dt, count(distinct user_id) as "DPU"
+from payments left join cte on cast(payments.payment_dttm as date) = cte.dt
+group by cte.dt
+order by 1
+  ) as t2 on t1.dt = t2.dt
 
 

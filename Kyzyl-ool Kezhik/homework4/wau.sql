@@ -1,13 +1,14 @@
-drop table if exists mydate;
+# WAU
 
-create table mydate (
-  currentdate date
-);
-
-insert into mydate values ('2018-09-07');
-
-select count(distinct users.user_id) as WAU
-from users left join sessions on users.user_id = sessions.user_id
-where begin_dttm > (select currentdate from mydate) and begin_dttm < date_add((select currentdate from mydate), interval 1 week);
-
-drop table if exists mydate;
+WITH RECURSIVE cte AS
+(
+    SELECT MIN(CAST(begin_dttm AS DATE)) AS dt FROM sessions
+        UNION ALL
+	SELECT dt + INTERVAL 1 week
+      FROM cte
+     WHERE dt + INTERVAL 1 week <= (SELECT MAX(CAST(begin_dttm AS DATE)) FROM sessions)
+)
+SELECT cte.dt as "Week start", COUNT(DISTINCT sessions.user_id) as 'WAU'
+  FROM sessions RIGHT JOIN cte ON CAST(sessions.begin_dttm AS DATE) = cte.dt
+ GROUP BY cte.dt
+order by 1;
