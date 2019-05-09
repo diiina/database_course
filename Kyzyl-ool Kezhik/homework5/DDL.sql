@@ -116,9 +116,14 @@ create table if not exists payment
 create index player_file_id_fk
 	on player (avatar_file_id);
 
-create table if not exists room
+create table if not exists session
 (
 	id int auto_increment
-		primary key
+		primary key,
+	begin timestamp default CURRENT_TIMESTAMP not null,
+	end timestamp null,
+	player int not null,
+	constraint session_player_id_fk
+		foreign key (player) references player (id)
 );
 
