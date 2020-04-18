@@ -4,7 +4,7 @@ USE HospitalDB;
 
 CREATE TABLE IF NOT EXISTS specialties (
     specialty VARCHAR(50) PRIMARY KEY NOT NULL,
-    is_requires_referral BOOLEAN NOT NULL
+    is_requires_referral BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS cabinets (
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS cabinets (
 
 CREATE TABLE IF NOT EXISTS clients (
     full_name VARCHAR(50) PRIMARY KEY NOT NULL,
-    is_insured BOOLEAN NOT NULL
+    is_insured BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS doctors (
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS appointments (
     appointment_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     doctor VARCHAR(50) NOT NULL,
     FOREIGN KEY (doctor) REFERENCES doctors(full_name) ON DELETE CASCADE,
-    doctor_referred_from VARCHAR(50),
+    doctor_referred_from VARCHAR(50) DEFAULT NULL,
     FOREIGN KEY (doctor_referred_from) REFERENCES doctors(full_name) ON DELETE SET NULL,
     client VARCHAR(50) NOT NULL,
     FOREIGN KEY (client) REFERENCES clients(full_name) ON DELETE CASCADE,
